@@ -1,0 +1,567 @@
+{
+ "editionId": "london",
+ "name": {
+  "en": "London",
+  "fa": "لندن"
+ },
+ "currency": {
+  "code": "USD",
+  "symbol": "$"
+ },
+ "goSalary": 200,
+ "jailFine": 50,
+ "buildingCostsByColor": {
+  "brown": 50,
+  "lightBlue": 50,
+  "pink": 100,
+  "orange": 100,
+  "red": 150,
+  "yellow": 150,
+  "green": 200,
+  "darkBlue": 200
+ },
+ "spaces": [
+  {
+   "n": 1,
+   "name": "GO",
+   "nameFa": "شروع",
+   "type": "go"
+  },
+  {
+   "n": 2,
+   "name": "Old Kent Road",
+   "nameFa": "اولد کنت رود",
+   "type": "street",
+   "color": "brown",
+   "price": 60,
+   "mortgage": 30,
+   "rent": [
+    2,
+    10,
+    30,
+    90,
+    160,
+    250
+   ],
+   "houseCost": 50
+  },
+  {
+   "n": 3,
+   "name": "Community Chest",
+   "nameFa": "صندوق جامعه",
+   "type": "community_chest"
+  },
+  {
+   "n": 4,
+   "name": "Whitechapel Road",
+   "nameFa": "وایت‌چپل رود",
+   "type": "street",
+   "color": "brown",
+   "price": 60,
+   "mortgage": 30,
+   "rent": [
+    4,
+    20,
+    60,
+    180,
+    320,
+    450
+   ],
+   "houseCost": 50
+  },
+  {
+   "n": 5,
+   "name": "Income Tax",
+   "nameFa": "مالیات بر درآمد",
+   "type": "tax",
+   "amount": 200
+  },
+  {
+   "n": 6,
+   "name": "King's Cross Station",
+   "nameFa": "ایستگاه کینگز کراس",
+   "type": "railroad",
+   "price": 200,
+   "mortgage": 100,
+   "rentByCount": [
+    25,
+    50,
+    100,
+    200
+   ]
+  },
+  {
+   "n": 7,
+   "name": "The Angel Islington",
+   "nameFa": "اَنجل آیلینگتون",
+   "type": "street",
+   "color": "lightBlue",
+   "price": 100,
+   "mortgage": 50,
+   "rent": [
+    6,
+    30,
+    90,
+    270,
+    400,
+    550
+   ],
+   "houseCost": 50
+  },
+  {
+   "n": 8,
+   "name": "Chance",
+   "nameFa": "شانس",
+   "type": "chance"
+  },
+  {
+   "n": 9,
+   "name": "Euston Road",
+   "nameFa": "یوستون رود",
+   "type": "street",
+   "color": "lightBlue",
+   "price": 100,
+   "mortgage": 50,
+   "rent": [
+    6,
+    30,
+    90,
+    270,
+    400,
+    550
+   ],
+   "houseCost": 50
+  },
+  {
+   "n": 10,
+   "name": "Pentonville Road",
+   "nameFa": "پنتون‌ویل رود",
+   "type": "street",
+   "color": "lightBlue",
+   "price": 120,
+   "mortgage": 60,
+   "rent": [
+    8,
+    40,
+    100,
+    300,
+    450,
+    600
+   ],
+   "houseCost": 50
+  },
+  {
+   "n": 11,
+   "name": "Jail / Just Visiting",
+   "nameFa": "زندان / فقط ملاقات",
+   "type": "jail"
+  },
+  {
+   "n": 12,
+   "name": "Pall Mall",
+   "nameFa": "پال مال",
+   "type": "street",
+   "color": "pink",
+   "price": 140,
+   "mortgage": 70,
+   "rent": [
+    10,
+    50,
+    150,
+    450,
+    625,
+    750
+   ],
+   "houseCost": 100
+  },
+  {
+   "n": 13,
+   "name": "Electric Company",
+   "nameFa": "شرکت برق",
+   "type": "utility",
+   "price": 120,
+   "mortgage": 60
+  },
+  {
+   "n": 14,
+   "name": "Whitehall",
+   "nameFa": "وایت‌هال",
+   "type": "street",
+   "color": "pink",
+   "price": 140,
+   "mortgage": 70,
+   "rent": [
+    10,
+    50,
+    150,
+    450,
+    625,
+    750
+   ],
+   "houseCost": 100
+  },
+  {
+   "n": 15,
+   "name": "Northumberland Avenue",
+   "nameFa": "نورثامبرلند اَوِنیو",
+   "type": "street",
+   "color": "pink",
+   "price": 160,
+   "mortgage": 80,
+   "rent": [
+    12,
+    60,
+    180,
+    500,
+    700,
+    900
+   ],
+   "houseCost": 100
+  },
+  {
+   "n": 16,
+   "name": "Marylebone Station",
+   "nameFa": "ایستگاه مریلبون",
+   "type": "railroad",
+   "price": 200,
+   "mortgage": 100,
+   "rentByCount": [
+    25,
+    50,
+    100,
+    200
+   ]
+  },
+  {
+   "n": 17,
+   "name": "Bow Street",
+   "nameFa": "باو استریت",
+   "type": "street",
+   "color": "orange",
+   "price": 180,
+   "mortgage": 90,
+   "rent": [
+    14,
+    70,
+    200,
+    550,
+    750,
+    950
+   ],
+   "houseCost": 100
+  },
+  {
+   "n": 18,
+   "name": "Community Chest",
+   "nameFa": "صندوق جامعه",
+   "type": "community_chest"
+  },
+  {
+   "n": 19,
+   "name": "Marlborough Street",
+   "nameFa": "مارلبرو استریت",
+   "type": "street",
+   "color": "orange",
+   "price": 180,
+   "mortgage": 90,
+   "rent": [
+    14,
+    70,
+    200,
+    550,
+    750,
+    950
+   ],
+   "houseCost": 100
+  },
+  {
+   "n": 20,
+   "name": "Vine Street",
+   "nameFa": "واین استریت",
+   "type": "street",
+   "color": "orange",
+   "price": 200,
+   "mortgage": 100,
+   "rent": [
+    16,
+    80,
+    220,
+    600,
+    800,
+    1000
+   ],
+   "houseCost": 100
+  },
+  {
+   "n": 21,
+   "name": "Free Parking",
+   "nameFa": "پارکینگ رایگان",
+   "type": "free_parking"
+  },
+  {
+   "n": 22,
+   "name": "Strand",
+   "nameFa": "استرند",
+   "type": "street",
+   "color": "red",
+   "price": 220,
+   "mortgage": 110,
+   "rent": [
+    18,
+    90,
+    250,
+    700,
+    875,
+    1050
+   ],
+   "houseCost": 150
+  },
+  {
+   "n": 23,
+   "name": "Chance",
+   "nameFa": "شانس",
+   "type": "chance"
+  },
+  {
+   "n": 24,
+   "name": "Fleet Street",
+   "nameFa": "فلیت استریت",
+   "type": "street",
+   "color": "red",
+   "price": 220,
+   "mortgage": 110,
+   "rent": [
+    18,
+    90,
+    250,
+    700,
+    875,
+    1050
+   ],
+   "houseCost": 150
+  },
+  {
+   "n": 25,
+   "name": "Trafalgar Square",
+   "nameFa": "میدان ترافالگار",
+   "type": "street",
+   "color": "red",
+   "price": 240,
+   "mortgage": 120,
+   "rent": [
+    20,
+    100,
+    300,
+    750,
+    925,
+    1100
+   ],
+   "houseCost": 150
+  },
+  {
+   "n": 26,
+   "name": "Fenchurch St. Station",
+   "nameFa": "ایستگاه فنچرچ استریت",
+   "type": "railroad",
+   "price": 200,
+   "mortgage": 100,
+   "rentByCount": [
+    25,
+    50,
+    100,
+    200
+   ]
+  },
+  {
+   "n": 27,
+   "name": "Leicester Square",
+   "nameFa": "میدان لستر",
+   "type": "street",
+   "color": "yellow",
+   "price": 260,
+   "mortgage": 130,
+   "rent": [
+    22,
+    110,
+    330,
+    800,
+    975,
+    1150
+   ],
+   "houseCost": 150
+  },
+  {
+   "n": 28,
+   "name": "Coventry Street",
+   "nameFa": "کاونتری استریت",
+   "type": "street",
+   "color": "yellow",
+   "price": 260,
+   "mortgage": 130,
+   "rent": [
+    22,
+    110,
+    330,
+    800,
+    975,
+    1150
+   ],
+   "houseCost": 150
+  },
+  {
+   "n": 29,
+   "name": "Water Works",
+   "nameFa": "شرکت آب",
+   "type": "utility",
+   "price": 260,
+   "mortgage": 130
+  },
+  {
+   "n": 30,
+   "name": "Piccadilly",
+   "nameFa": "پیکدیلی",
+   "type": "street",
+   "color": "yellow",
+   "price": 280,
+   "mortgage": 140,
+   "rent": [
+    24,
+    120,
+    360,
+    850,
+    1025,
+    1200
+   ],
+   "houseCost": 150
+  },
+  {
+   "n": 31,
+   "name": "Go to Jail",
+   "nameFa": "برو به زندان",
+   "type": "go_to_jail"
+  },
+  {
+   "n": 32,
+   "name": "Regent Street",
+   "nameFa": "ریجنت استریت",
+   "type": "street",
+   "color": "green",
+   "price": 300,
+   "mortgage": 150,
+   "rent": [
+    26,
+    130,
+    390,
+    900,
+    1100,
+    1275
+   ],
+   "houseCost": 200
+  },
+  {
+   "n": 33,
+   "name": "Oxford Street",
+   "nameFa": "آکسفورد استریت",
+   "type": "street",
+   "color": "green",
+   "price": 300,
+   "mortgage": 150,
+   "rent": [
+    26,
+    130,
+    390,
+    900,
+    1100,
+    1275
+   ],
+   "houseCost": 200
+  },
+  {
+   "n": 34,
+   "name": "Community Chest",
+   "nameFa": "صندوق جامعه",
+   "type": "community_chest"
+  },
+  {
+   "n": 35,
+   "name": "Bond Street",
+   "nameFa": "باند استریت",
+   "type": "street",
+   "color": "green",
+   "price": 320,
+   "mortgage": 160,
+   "rent": [
+    28,
+    150,
+    450,
+    1000,
+    1200,
+    1400
+   ],
+   "houseCost": 200
+  },
+  {
+   "n": 36,
+   "name": "Liverpool St. Station",
+   "nameFa": "ایستگاه لیورپول استریت",
+   "type": "railroad",
+   "price": 200,
+   "mortgage": 100,
+   "rentByCount": [
+    25,
+    50,
+    100,
+    200
+   ]
+  },
+  {
+   "n": 37,
+   "name": "Chance",
+   "nameFa": "شانس",
+   "type": "chance"
+  },
+  {
+   "n": 38,
+   "name": "Park Lane",
+   "nameFa": "پارک لین",
+   "type": "street",
+   "color": "darkBlue",
+   "price": 350,
+   "mortgage": 175,
+   "rent": [
+    35,
+    175,
+    500,
+    1100,
+    1300,
+    1500
+   ],
+   "houseCost": 200
+  },
+  {
+   "n": 39,
+   "name": "Super Tax",
+   "nameFa": "مالیات اضافی",
+   "type": "tax",
+   "amount": 100
+  },
+  {
+   "n": 40,
+   "name": "Mayfair",
+   "nameFa": "می‌فیر",
+   "type": "street",
+   "color": "darkBlue",
+   "price": 400,
+   "mortgage": 200,
+   "rent": [
+    50,
+    200,
+    600,
+    1400,
+    1700,
+    2000
+   ],
+   "houseCost": 200
+  }
+ ]
+}

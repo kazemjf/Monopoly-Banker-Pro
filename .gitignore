@@ -1,0 +1,15 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+*.iml
+.idea/
+# Android
+local.properties
+android/.gradle/
+android/build/
+android/captures/
+# binaries committed separately
+*.apk
+*.aab
