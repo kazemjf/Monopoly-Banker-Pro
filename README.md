@@ -150,4 +150,4 @@ Developed by **Kazem** — [t.me/Kaz33mm](https://t.me/Kaz33mm) — with AI assi
 
 ## License
 
-© 2026 Kazem. All rights reserved.
+MIT License — see [LICENSE](LICENSE). Copyright (c) 2026 kazemjf.
