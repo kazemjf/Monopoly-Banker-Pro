@@ -99,6 +99,14 @@ class GameState {
   String id;
   String name;
   String editionId;
+  /// Manual currency unit entered at game setup (e.g. "تومان", "£").
+  /// Null = the edition's own currency symbol.
+  String? currencySymbol;
+  /// Space number of a property whose auction closed with no bids (0 = none).
+  /// While set, ending the turn on that space is allowed and the property
+  /// stays unowned; it is cleared as soon as the turn advances or the
+  /// player moves again.
+  int noBidAuctionSpaceN;
   String status; // active | paused | ended
   int createdAt;
   int updatedAt;
@@ -111,6 +119,7 @@ class GameState {
 
   GameState({
     required this.id, required this.name, required this.editionId,
+    this.currencySymbol, this.noBidAuctionSpaceN = 0,
     this.status = 'active', required this.createdAt, required this.updatedAt,
     required this.startCash, required this.goSalary, this.currentPlayerIdx = 0,
     required this.players, Map<int, DeedState>? deeds, List<TxEntry>? ledger,
@@ -126,6 +135,8 @@ class GameState {
         id: j['id'] as String,
         name: j['name'] as String,
         editionId: j['editionId'] as String,
+        currencySymbol: j['currencySymbol'] as String?,
+        noBidAuctionSpaceN: (j['noBidAuctionSpaceN'] as num?)?.toInt() ?? 0,
         status: j['status'] as String? ?? 'active',
         createdAt: (j['createdAt'] as num).toInt(),
         updatedAt: (j['updatedAt'] as num).toInt(),
@@ -146,7 +157,9 @@ class GameState {
       );
 
   Map<String, dynamic> toJson() => {
-        'id': id, 'name': name, 'editionId': editionId, 'status': status,
+        'id': id, 'name': name, 'editionId': editionId,
+        'currencySymbol': currencySymbol,
+        'noBidAuctionSpaceN': noBidAuctionSpaceN, 'status': status,
         'createdAt': createdAt, 'updatedAt': updatedAt,
         'startCash': startCash, 'goSalary': goSalary,
         'currentPlayerIdx': currentPlayerIdx,

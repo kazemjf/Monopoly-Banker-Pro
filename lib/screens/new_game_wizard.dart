@@ -19,6 +19,7 @@ class _NewGameWizardScreenState extends State<NewGameWizardScreen> {
   final _nameCtrl = TextEditingController();
   final _cashCtrl = TextEditingController(text: '1500');
   final _goCtrl = TextEditingController();
+  final _currencyCtrl = TextEditingController();
   final List<TextEditingController> _players = [];
   int _startingPlayer = 0;
 
@@ -31,6 +32,7 @@ class _NewGameWizardScreenState extends State<NewGameWizardScreen> {
         setState(() {
           _edition = e;
           _goCtrl.text = '${e.goSalary}';
+          _currencyCtrl.text = e.currencySymbol;
         });
       }
     });
@@ -41,6 +43,7 @@ class _NewGameWizardScreenState extends State<NewGameWizardScreen> {
     _nameCtrl.dispose();
     _cashCtrl.dispose();
     _goCtrl.dispose();
+    _currencyCtrl.dispose();
     for (final c in _players) {
       c.dispose();
     }
@@ -54,6 +57,9 @@ class _NewGameWizardScreenState extends State<NewGameWizardScreen> {
       _editionId = id;
       _edition = e;
       _goCtrl.text = '${e.goSalary}';
+      // A new edition resets the currency field to its own unit; the
+      // banker can then type any unit they want before creating the game.
+      _currencyCtrl.text = e.currencySymbol;
     });
   }
 
@@ -69,6 +75,7 @@ class _NewGameWizardScreenState extends State<NewGameWizardScreen> {
       );
       return;
     }
+    final currency = _currencyCtrl.text.trim();
     final game = await AppScope.of(context).games.createGame(
           name: _nameCtrl.text,
           editionId: _editionId,
@@ -76,6 +83,7 @@ class _NewGameWizardScreenState extends State<NewGameWizardScreen> {
           goSalary: int.tryParse(_goCtrl.text) ?? (_edition?.goSalary ?? 200),
           playerNames: names,
           startingPlayerIdx: _startingPlayer.clamp(0, names.length - 1),
+          currencySymbol: currency.isEmpty ? null : currency,
         );
     if (!mounted) return;
     final edition = _edition ?? await getEdition(_editionId);
@@ -88,6 +96,7 @@ class _NewGameWizardScreenState extends State<NewGameWizardScreen> {
       setState(() {
         _step = 0;
         _nameCtrl.clear();
+        _currencyCtrl.text = _edition?.currencySymbol ?? '';
         _startingPlayer = 0;
       });
     }
@@ -174,13 +183,21 @@ class _NewGameWizardScreenState extends State<NewGameWizardScreen> {
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
-            hintText: '${_edition?.goSalary ?? 200} (${_edition?.currencySymbol ?? '\$'})',
+            hintText: '${_edition?.goSalary ?? 200} (${_currencyCtrl.text.isNotEmpty ? _currencyCtrl.text : (_edition?.currencySymbol ?? '\$')})',
           ),
+        ),
+        SectionHeader(prefs.t('newg.currency')),
+        TextField(
+          controller: _currencyCtrl,
+          decoration: InputDecoration(
+            hintText: _edition?.currencySymbol ?? '\$',
+          ),
+          onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: 8),
         if (_edition != null)
           Text(
-            '${_edition!.localizedName(prefs.locale)} • ${_edition!.currencySymbol}',
+            '${_edition!.localizedName(prefs.locale)} • ${_currencyCtrl.text.isNotEmpty ? _currencyCtrl.text : _edition!.currencySymbol}',
             style: TextStyle(color: pal.muted, fontSize: 12),
           ),
       ],

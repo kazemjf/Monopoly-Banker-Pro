@@ -1,7 +1,7 @@
 name: monopoly_banker_pro
 description: Monopoly Banker Pro — the table's banker companion.
 publish_to: 'none'
-version: 1.0.0+4
+version: 1.0.1+5
 
 environment:
   sdk: ^3.9.0

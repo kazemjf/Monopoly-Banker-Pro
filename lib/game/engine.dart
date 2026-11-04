@@ -47,6 +47,17 @@ int utilityRent(int diceTotal, int ownedCount) =>
 
 int unmortgageCost(int price) => (price * 0.55).ceil();
 int mortgageValue(int price) => price ~/ 2;
+
+/// Utility exception: mortgaging a utility always pays a flat 75 and
+/// lifting its mortgage always costs 83, whatever its printed price.
+/// (Streets and railroads keep the half-price / 55% rules above.)
+const int utilityMortgageValue = 75;
+const int utilityUnmortgageCost = 83;
+
+int mortgageValueFor(BoardSpace space) =>
+    space.type == 'utility' ? utilityMortgageValue : mortgageValue(space.price!);
+int unmortgageCostFor(BoardSpace space) =>
+    space.type == 'utility' ? utilityUnmortgageCost : unmortgageCost(space.price!);
 int sellBuildingValue(int houseCost) => houseCost ~/ 2;
 
 /// Why building on [spaceN] is currently not allowed (null = allowed).

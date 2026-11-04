@@ -60,7 +60,9 @@ class GameController extends ChangeNotifier {
 
   GameController({required this.game, required this.edition, required this.save});
 
-  String get sym => edition.currencySymbol;
+  /// Display currency: the unit entered at game setup, or the edition's
+  /// own symbol for older saves and games that kept the default.
+  String get sym => game.currencySymbol ?? edition.currencySymbol;
   String money(int v) => fmtMoney(v, sym);
 
   PlayerState player(String id) => game.players.firstWhere((p) => p.id == id);
@@ -104,9 +106,11 @@ class GameController extends ChangeNotifier {
     }
     // Resolve the current player's landing BEFORE advancing the turn.
     final res = resolveLanding(game, edition, p);
-    if (res.kind == LandingKind.buy) {
+    if (res.kind == LandingKind.buy && game.noBidAuctionSpaceN != p.position) {
       // Unowned purchasable space: the turn is BLOCKED until the banker
       // buys the property or auctions it. Turn stays on the same player.
+      // Exception: an auction that closed with no bids on this very space
+      // leaves the property unowned AND lets the turn advance.
       final space = edition.space(p.position);
       return NextTurnInfo(
         advanced: false,
@@ -137,7 +141,8 @@ class GameController extends ChangeNotifier {
         amount: rent,
       );
     }
-    // Advance: reset per-turn state.
+    // Advance: reset per-turn state (consuming any no-bid auction flag).
+    game.noBidAuctionSpaceN = 0;
     p.consecutiveDoubles = 0;
     game.currentPlayerIdx = (game.currentPlayerIdx + 1) % game.players.length;
     game.currentPlayer.movedThisTurn = false;
@@ -166,6 +171,7 @@ class GameController extends ChangeNotifier {
   Future<void> setPosition(String playerId, int spaceN) async {
     final p = player(playerId);
     if (p.jailed) return;
+    game.noBidAuctionSpaceN = 0;
     p.position = spaceN;
     p.hasMoved = true;
     p.movedThisTurn = true;
@@ -178,6 +184,7 @@ class GameController extends ChangeNotifier {
   Future<void> manualMove(String playerId, int toSpaceN, {required bool goSalaryApplies}) async {
     final p = player(playerId);
     if (p.jailed) return;
+    game.noBidAuctionSpaceN = 0;
     final firstMove = !p.hasMoved;
     p.position = toSpaceN;
     p.hasMoved = true;
@@ -196,6 +203,7 @@ class GameController extends ChangeNotifier {
 
   /// Shared dice-movement step (position, GO salary, flags).
   Future<void> _moveForDice(PlayerState p, int steps) async {
+    game.noBidAuctionSpaceN = 0;
     final firstMove = !p.hasMoved;
     final r = moveSteps(p.position, steps);
     p.position = r.newPosition;
@@ -291,6 +299,7 @@ class GameController extends ChangeNotifier {
   Future<void> buyProperty(String playerId, int spaceN) async {
     final p = player(playerId);
     final s = edition.space(spaceN);
+    game.noBidAuctionSpaceN = 0;
     p.cash -= s.price!;
     game.deeds[spaceN] = DeedState(spaceN: spaceN, ownerId: playerId);
     _log('purchase', '${p.name} buys ${s.name} for ${money(s.price!)}',
@@ -301,10 +310,20 @@ class GameController extends ChangeNotifier {
   Future<void> auctionProperty(int spaceN, String winnerId, int bid) async {
     final w = player(winnerId);
     final s = edition.space(spaceN);
+    game.noBidAuctionSpaceN = 0;
     w.cash -= bid;
     game.deeds[spaceN] = DeedState(spaceN: spaceN, ownerId: winnerId);
     _log('auction', '${w.name} wins auction: ${s.name} for ${money(bid)}',
         amount: bid, toName: w.name);
+    await _commit();
+  }
+
+  /// Auction closed with no bids: nobody pays, nobody owns the property,
+  /// and the turn may advance past this unowned space (see [nextTurn]).
+  Future<void> closeAuctionNoBids(int spaceN) async {
+    final s = edition.space(spaceN);
+    game.noBidAuctionSpaceN = spaceN;
+    _log('auction', 'Auction: ${s.name} — no bids, remains unowned');
     await _commit();
   }
 
@@ -354,6 +373,7 @@ class GameController extends ChangeNotifier {
   // ---------- jail ----------
   Future<void> sendToJail(String playerId) async {
     final p = player(playerId);
+    game.noBidAuctionSpaceN = 0;
     p.jailed = true;
     p.position = 11; // jail space
     p.jailAttempts = 0;
@@ -428,7 +448,7 @@ class GameController extends ChangeNotifier {
     final p = player(playerId);
     final s = edition.space(spaceN);
     final deed = game.deeds[spaceN]!;
-    final val = mortgageValue(s.price!);
+    final val = mortgageValueFor(s);
     p.cash += val;
     deed.mortgaged = true;
     _log('mortgage', '${p.name} mortgages ${s.name} (+${money(val)})',
@@ -440,7 +460,7 @@ class GameController extends ChangeNotifier {
     final p = player(playerId);
     final s = edition.space(spaceN);
     final deed = game.deeds[spaceN]!;
-    final cost = unmortgageCost(s.price!);
+    final cost = unmortgageCostFor(s);
     p.cash -= cost;
     deed.mortgaged = false;
     _log('unmortgage', '${p.name} unmortgages ${s.name} (${money(cost)})',

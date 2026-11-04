@@ -23,6 +23,12 @@ Edition _fakeEdition() {
     n: 6, name: 'RR', nameFa: 'راه', type: 'railroad', price: 200, mortgage: 100,
     rentByCount: const [25, 50, 100, 200],
   );
+  // Utility priced 260 on purpose: half-price would be 130, but the
+  // utility exception must still give a flat 75 / cost 83.
+  spaces[12] = BoardSpace(
+    n: 13, name: 'Utility', nameFa: 'تأسیسات', type: 'utility',
+    price: 260, mortgage: 130,
+  );
   return Edition(
     id: 'test', nameEn: 'Test', nameFa: 'تست',
     currencySymbol: '\$', currencyCode: 'USD',
@@ -316,6 +322,77 @@ void main() {
       expect(p.consecutiveDoubles, 0);
       final rt = PlayerState.fromJson(p.toJson());
       expect(rt.movedThisTurn, isFalse);
+    });
+  });
+
+  group('v1.0.1: currency, no-bid auctions, utility mortgage', () {
+    test('manual currency overrides the edition symbol, default falls back', () {
+      final e = _fakeEdition();
+      final g = _fakeGame()..currencySymbol = 'تومان';
+      expect(_ctl(g, e).sym, 'تومان');
+      expect(_ctl(g, e).money(1500), 'تومان1,500');
+      final g2 = _fakeGame();
+      expect(_ctl(g2, e).sym, '\$');
+      // round-trip + old saves without the field
+      final rt = GameState.fromJson(g.toJson());
+      expect(rt.currencySymbol, 'تومان');
+      final old = GameState.fromJson({
+        'id': 'g9', 'name': 'Old', 'editionId': 'test',
+        'createdAt': 0, 'updatedAt': 0, 'startCash': 1500, 'goSalary': 200,
+        'players': [],
+      });
+      expect(old.currencySymbol, isNull);
+      expect(old.noBidAuctionSpaceN, 0);
+    });
+
+    test('utility mortgage is flat 75 / unmortgage 83 regardless of price', () {
+      final e = _fakeEdition();
+      final util = e.space(13);
+      expect(mortgageValueFor(util), 75);
+      expect(unmortgageCostFor(util), 83);
+      // streets keep half-price / 55%
+      final street = e.space(2);
+      expect(mortgageValueFor(street), 30);
+      expect(unmortgageCostFor(street), 33);
+    });
+
+    test('controller utility mortgage/unmortgage moves flat amounts', () async {
+      final e = _fakeEdition();
+      final g = _fakeGame();
+      final c = _ctl(g, e);
+      g.deeds[13] = DeedState(spaceN: 13, ownerId: 'p1');
+      await c.mortgage('p1', 13);
+      expect(g.deeds[13]!.mortgaged, isTrue);
+      expect(g.players[0].cash, 1500 + 75);
+      await c.unmortgage('p1', 13);
+      expect(g.deeds[13]!.mortgaged, isFalse);
+      expect(g.players[0].cash, 1500 + 75 - 83);
+    });
+
+    test('auction with no bids leaves the property unowned but lets the turn advance', () async {
+      final e = _fakeEdition();
+      final g = _fakeGame();
+      final c = _ctl(g, e);
+      g.players[0].position = 2; // unowned street
+      g.players[0].movedThisTurn = true;
+      await c.closeAuctionNoBids(2);
+      expect(g.deeds[2], isNull); // nobody owns it
+      expect(g.ledger.last.type, 'auction');
+      final info = await c.nextTurn('en');
+      expect(info.advanced, isTrue);
+      expect(g.currentPlayerIdx, 1);
+      expect(g.noBidAuctionSpaceN, 0); // flag consumed
+    });
+
+    test('no-bid flag is cleared when the player moves again', () async {
+      final e = _fakeEdition();
+      final g = _fakeGame();
+      final c = _ctl(g, e);
+      g.players[0].position = 2;
+      g.players[0].movedThisTurn = true;
+      await c.closeAuctionNoBids(2);
+      await c.diceMove('p1', 1); // moves off the space
+      expect(g.noBidAuctionSpaceN, 0);
     });
   });
 

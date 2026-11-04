@@ -255,6 +255,14 @@ class _DeedsTabState extends State<DeedsTab> {
                 },
                 child: Text(prefs.t('play.placeBid')),
               ),
+              const SizedBox(height: 8),
+              OutlinedButton(
+                onPressed: () async {
+                  await ctl.closeAuctionNoBids(space.n);
+                  if (ctx.mounted) Navigator.of(ctx).pop();
+                },
+                child: Text(prefs.t('play.auctionNoBids')),
+              ),
             ],
           ),
         ),
@@ -318,9 +326,10 @@ class _DeedsTabState extends State<DeedsTab> {
               if (d.houses > 0)
                 _sellChip(prefs, pal, ctl, pl, d),
               if (!d.mortgaged && d.houses == 0)
-                _mini(prefs.t('play.mortgage'), true, () => ctl.mortgage(pl.id, d.spaceN), pal),
+                _mini('${prefs.t('play.mortgage')} (+${ctl.money(mortgageValueFor(s))})', true,
+                    () => ctl.mortgage(pl.id, d.spaceN), pal),
               if (d.mortgaged)
-                _mini('${prefs.t('play.unmortgage')} (${ctl.money(unmortgageCost(s.price!))})', true,
+                _mini('${prefs.t('play.unmortgage')} (${ctl.money(unmortgageCostFor(s))})', true,
                     () => ctl.unmortgage(pl.id, d.spaceN), pal),
             ],
           ),

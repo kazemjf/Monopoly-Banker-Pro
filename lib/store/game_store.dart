@@ -83,6 +83,7 @@ class GameStore extends ChangeNotifier {
     required int goSalary,
     required List<String> playerNames,
     required int startingPlayerIdx,
+    String? currencySymbol,
   }) async {
     final now = DateTime.now().millisecondsSinceEpoch;
     final players = <PlayerState>[];
@@ -97,6 +98,7 @@ class GameStore extends ChangeNotifier {
       id: newId('g'),
       name: name.trim().isEmpty ? 'Game' : name.trim(),
       editionId: editionId,
+      currencySymbol: currencySymbol,
       createdAt: now,
       updatedAt: now,
       startCash: startCash,
